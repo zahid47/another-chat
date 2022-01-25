@@ -2,14 +2,33 @@ import { Button, Container, Form } from "react-bootstrap";
 import { useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
 
-  const handleOnSubmit = (e) => {
+  const navigate = useNavigate();
+
+  const handleRegister = (e) => {
+    e.preventDefault();
+
+    const newUser = {
+      username: username,
+      password: password,
+    };
+
+    axios
+      .post("http://localhost:8000/api/auth/register", newUser)
+      .then((response) => {
+        alert("Registration Successful, Please Log In");
+      })
+      .catch((err) => {
+        alert(JSON.stringify(err.response.data));
+      });
+  };
+
+  const handleLogin = (e) => {
     e.preventDefault();
 
     const newUser = {
@@ -24,10 +43,10 @@ export default function Login() {
           expires: 1,
         });
 
-        <Navigate to="/" />;
+        navigate("/dashboard");
       })
       .catch((err) => {
-        setError(err.response.data);
+        alert(JSON.stringify(err.response.data));
       });
   };
 
@@ -36,7 +55,7 @@ export default function Login() {
       className="align-items-center d-flex"
       style={{ height: "100vh" }}
     >
-      <Form className="mb-3" onSubmit={handleOnSubmit}>
+      <Form className="w-100">
         <Form.Group>
           <Form.Label>Username</Form.Label>
           <Form.Control
@@ -59,9 +78,10 @@ export default function Login() {
           ></Form.Control>
         </Form.Group>
 
-        <Button type="submit">Log In</Button>
-
-        {/* <Button variant="secondary">Create A New Account</Button> */}
+        <Button onClick={handleLogin}>Log In</Button>
+        <Button variant="secondary" onClick={handleRegister}>
+          Register
+        </Button>
       </Form>
     </Container>
   );

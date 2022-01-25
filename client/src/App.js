@@ -1,52 +1,27 @@
-import { useEffect, useState } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
-import axios from "axios";
+import { useEffect } from "react";
+import { useNavigate, Outlet } from "react-router-dom";
 import Cookies from "js-cookie";
-
-import isEmpty from "./utils/isEmpty";
-
-import Register from "./Components/Register";
-import Login from "./Components/Login";
-import Dashboard from "./Components/Dashboard";
+import { Container } from "react-bootstrap";
 
 function App() {
-  const [user, setUser] = useState({});
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (Cookies.get("token")) {
-      getUser();
+      navigate("/dashboard");
+    } else {
+      navigate("/auth");
     }
-  }, [user]);
-
-  const getUser = () => {
-    const options = {
-      headers: {
-        Authorization: `Bearer ${Cookies.get("token")}`,
-        "Content-Type": "application/json",
-      },
-    };
-    axios
-      .get("http://localhost:8000/api/auth/current", options)
-      .then((response) => {
-        setUser(response.data);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
+  }, [navigate]);
 
   return (
     <>
-      {isEmpty(user) ? <Navigate to="/login" /> : <Navigate to="/dashboard" />}
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/dashboard" element={<Dashboard user={user} />} />
-      </Routes>
+      <Container>
+        <h3 style={{ textAlign: "center" }}>welcome to another-chat</h3>
+      </Container>
+      <Outlet />
     </>
   );
 }
 
 export default App;
-
-//TODO: WHY REDIRECT SLOW???!!! :(
