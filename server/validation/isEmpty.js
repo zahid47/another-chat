@@ -9,4 +9,4 @@ const isEmpty = (data) => {
   );
 };
 
-export default isEmpty;
+module.exports = isEmpty;

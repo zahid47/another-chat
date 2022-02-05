@@ -1,4 +1,4 @@
-import { Button, Container, Form } from "react-bootstrap";
+import { Button, Container, Form, ButtonGroup } from "react-bootstrap";
 import { useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -21,7 +21,7 @@ export default function Login() {
     axios
       .post("http://localhost:8000/api/auth/register", newUser)
       .then((response) => {
-        alert("Registration Successful, Please Log In");
+        alert("Registration Successful, Please Log In"); //TODO: use bootstrap alert here
       })
       .catch((err) => {
         alert(JSON.stringify(err.response.data));
@@ -78,10 +78,16 @@ export default function Login() {
           ></Form.Control>
         </Form.Group>
 
-        <Button onClick={handleLogin}>Log In</Button>
-        <Button variant="secondary" onClick={handleRegister}>
-          Register
-        </Button>
+        <hr style={{ opacity: 0 }}></hr>
+
+        <ButtonGroup aria-label="Basic example">
+          <Button variant="outline-dark" onClick={handleLogin}>
+            Log In
+          </Button>
+          <Button variant="outline-dark" onClick={handleRegister}>
+            Register
+          </Button>
+        </ButtonGroup>
       </Form>
     </Container>
   );
