@@ -3,10 +3,15 @@ import { useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
+import DismissableAlert from "./DismissableAlert";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  const [showAuthAlert, setShowAuthAlert] = useState(false);
+  const [authAlertText, setAuthAlertText] = useState("");
+  const [authAlertVariant, setAuthAlertVariant] = useState("dark");
 
   const navigate = useNavigate();
 
@@ -21,10 +26,16 @@ export default function Login() {
     axios
       .post("http://localhost:8000/api/auth/register", newUser)
       .then((response) => {
-        alert("Registration Successful, Please Log In"); //TODO: use bootstrap alert here
+        setAuthAlertText(
+          `Hello ${response.data.username}, your registration was successful. Please Log in.`
+        );
+        setAuthAlertVariant("success");
+        setShowAuthAlert(true);
       })
       .catch((err) => {
-        alert(JSON.stringify(err.response.data));
+        setAuthAlertText(JSON.stringify(err.response.data));
+        setAuthAlertVariant("danger");
+        setShowAuthAlert(true);
       });
   };
 
@@ -46,7 +57,10 @@ export default function Login() {
         navigate("/dashboard");
       })
       .catch((err) => {
-        alert(JSON.stringify(err.response.data));
+        //TODO: make the error msgs better!
+        setAuthAlertText(JSON.stringify(err.response.data));
+        setAuthAlertVariant("danger");
+        setShowAuthAlert(true);
       });
   };
 
@@ -56,6 +70,13 @@ export default function Login() {
       style={{ height: "100vh" }}
     >
       <Form className="w-100">
+        <DismissableAlert
+          variant={authAlertVariant}
+          text={authAlertText}
+          show={showAuthAlert}
+          setShow={setShowAuthAlert}
+        />
+
         <Form.Group>
           <Form.Label>Username</Form.Label>
           <Form.Control

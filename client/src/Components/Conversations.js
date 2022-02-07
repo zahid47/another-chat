@@ -14,13 +14,17 @@ export default function Conversations({ user }) {
 
   return (
     <>
-      <ul>
-        {conversations.map((conversation) => (
-          <li key={conversation.id}>
-            <Conversation conversation={conversation} user={user} />
-          </li>
-        ))}
-      </ul>
+      {conversations.length > 0 ? (
+        <ul>
+          {conversations.map((conversation) => (
+            <li key={conversation._id}>
+              <Conversation conversation={conversation} user={user} />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>You don't have any conversations. Why not start a new one?</p>
+      )}
     </>
   );
 }

@@ -8,8 +8,13 @@ const router = express.Router();
 // @access public
 router.get("/:userId", (req, res) => {
   User.findById(req.params.userId)
-    .then((response) => res.status(200).json(response))
-    .catch((err) => res.status(500).json(err))
+    .then((response) =>
+      res.status(200).json({
+        id: response.id,
+        username: response.username,
+      })
+    )
+    .catch((err) => res.status(400).json(err));
 });
 
 // @route  GET api/user
@@ -17,8 +22,13 @@ router.get("/:userId", (req, res) => {
 // @access public
 router.get("/name/:username", (req, res) => {
   User.findOne({ username: req.params.username })
-    .then((response) => res.status(200).json(response))
-    .catch((err) => res.status(500).json(err));
+    .then((response) =>
+      res.status(200).json({
+        id: response.id,
+        username: response.username,
+      })
+    )
+    .catch((err) => res.status(400).json(err));
 });
 
 module.exports = router;

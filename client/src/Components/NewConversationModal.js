@@ -2,10 +2,13 @@ import axios from "axios";
 import React, { useState } from "react";
 import { Button, Modal, Form } from "react-bootstrap";
 import isEmpty from "../utils/isEmpty";
+//TODO handle if no convos
 
 export default function NewConversationModal({ show, setShowModal, user }) {
   const [friendsName, setFriendsName] = useState("");
   const [alertMsg, setAlertMsg] = useState("");
+
+  const [hasConvoFlag, setHasConvoFlag] = useState(false);
 
   const handleCloseModal = () => {
     setAlertMsg("");
@@ -21,20 +24,46 @@ export default function NewConversationModal({ show, setShowModal, user }) {
     } else if (friendsName === user.username) {
       setAlertMsg("You can't send message to yourself!");
     } else {
+      //finding the friend
       axios
         .get(`http://localhost:8000/api/user/name/${friendsName}`)
-        .then((response) => {
-          if (response.data) {
-            handleCloseModal();
-            //Friend found!
-            //TODO now create a conv with the friend!
-          } else {
-            setAlertMsg(
-              "404 friend not found. Make sure you have the the correct spelling!"
-            );
-          }
+        .then((friendResponse) => {
+          //first check if we already have a convo with this friend
+          axios
+            .get(`http://localhost:8000/api/chat/conversations/${user.id}`)
+            .then((convoResponse) => {
+              for (const convo of convoResponse.data) {
+                if (convo.members.includes(friendResponse.data.id)) {
+                  setHasConvoFlag(true);
+                  setAlertMsg(
+                    "You already have a conversation with this friend"
+                  );
+                  console.log("match!");
+                  console.log(hasConvoFlag);
+                  break;
+                }
+              }
+
+              if (!hasConvoFlag) {
+                //we dont already have a convo so creating a new one!
+                const newConvo = {
+                  senderId: user.id,
+                  receiverId: friendResponse.data.id,
+                };
+                axios
+                  .post(
+                    "http://localhost:8000/api/chat/conversations",
+                    newConvo
+                  )
+                  .then((friendResponse) => console.log("convo created!"))
+                  .catch((err) => console.log(err));
+
+                handleCloseModal();
+              }
+            })
+            .catch((err) => console.log(err));
         })
-        .catch((err) => console.log(err));
+        .catch((err) => setAlertMsg("404 friend not found."));
     }
   };
 
@@ -72,7 +101,7 @@ export default function NewConversationModal({ show, setShowModal, user }) {
           type="submit"
           onClick={handleSendMessage}
         >
-          Send Message
+          Start a Conversation
         </Button>
       </Modal.Footer>
     </Modal>

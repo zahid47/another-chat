@@ -6,6 +6,7 @@ const conversationSchema = new Schema(
     members: {
       type: Array,
       required: true,
+      unique: true,
     },
   },
   { timestamps: true }

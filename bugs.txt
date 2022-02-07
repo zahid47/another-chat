@@ -1,0 +1,10 @@
+FIXME:  when creating a new convo, if we get an error, we cant create a new convo even with correct details.
+        have to reload in order for it to work again.
+REASON: UNKNOWN
+IDEAS:  NONE
+
+FIXME:  can create two convos with the same person.
+REASON: "hasConvoFlag" not updating for some reason.
+IDEAS:  make sure we are not able to do that on the server side.
+
+TODO: work on the server tomorrow
