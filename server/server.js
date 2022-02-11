@@ -5,9 +5,8 @@ const passport = require("passport");
 const cors = require("cors");
 const secrets = require("./config/secrets");
 const auth = require("./routes/api/auth");
-const oauth = require("./routes/api/oauth");
-const chat = require("./routes/api/chat");
-const user = require("./routes/api/user");
+const chat = require("./routes/api/conversations");
+const users = require("./routes/api/users");
 
 //express stuff
 const app = express();
@@ -44,9 +43,8 @@ app.get("/", (req, res) => {
 
 //Routes
 app.use("/api/auth", auth);
-app.use("/api/oauth", oauth);
+app.use("/api/users", users);
 app.use("/api/chat", chat);
-app.use("/api/user", user);
 ///
 
 app.listen(PORT, () => {

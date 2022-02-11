@@ -30,34 +30,29 @@ router.post("/register", (req, res) => {
     if (user) {
       return res.status(400).json({ username: "username already exists" });
     } else {
-      // User.findOne({ email: req.body.email }).then((user) => {
-      //   if (user) {
-      //     return res.status(400).json({ email: "email already exists" });
-      //   } else {
       const newUser = new User({
         username: req.body.username,
-        // email: req.body.email,
       });
 
+      //hash the pass
       bcrypt.genSalt((err, salt) => {
         if (err) throw err;
         bcrypt.hash(req.body.password, salt, (err, hashedPassword) => {
           if (err) throw err;
           newUser.password = hashedPassword;
+          //save the new user in DB
           newUser
             .save()
             .then((user) => res.status(201).json(user))
             .catch((err) => console.error(err));
         });
       });
-      //   }
-      // });
     }
   });
 });
 
 // @route  POST api/auth/login
-// @desc   log in an user/ return a JWT token
+// @desc   log in an user / return a JWT token
 // @access public
 router.post("/login", (req, res) => {
   const { errors, isValid } = validateLoginInput(req.body);
@@ -90,7 +85,7 @@ router.post("/login", (req, res) => {
 // @desc   return currently logged in user
 // @access private
 router.get(
-  "/current",
+  "/me",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     res.status(200).json({
