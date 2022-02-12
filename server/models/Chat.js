@@ -1,18 +1,17 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const conversationSchema = new Schema(
+const chatSchema = new Schema(
   {
     members: {
       type: Array,
       required: true,
-      unique: true,
     },
   },
   { timestamps: true }
 );
 
-module.exports = Conversation = mongoose.model(
-  "conversations",
-  conversationSchema
+module.exports = Chat = mongoose.model(
+  "chats",
+  chatSchema
 );

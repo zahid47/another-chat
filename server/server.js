@@ -4,9 +4,11 @@ const bodyParser = require("body-parser");
 const passport = require("passport");
 const cors = require("cors");
 const secrets = require("./config/secrets");
+//routes
 const auth = require("./routes/api/auth");
-const chat = require("./routes/api/conversations");
 const users = require("./routes/api/users");
+const chat = require("./routes/api/chats");
+const message = require("./routes/api/messages");
 
 //express stuff
 const app = express();
@@ -44,7 +46,8 @@ app.get("/", (req, res) => {
 //Routes
 app.use("/api/auth", auth);
 app.use("/api/users", users);
-app.use("/api/chat", chat);
+app.use("/api/chats", chat);
+app.use("/api/messages", message);
 ///
 
 app.listen(PORT, () => {

@@ -1,11 +1,16 @@
 const express = require("express");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
 const User = require("../../models/User");
-const isEmpty = require("../../validation/isEmpty");
 
 const router = express.Router();
+
+// @route  GET api/auth/test
+// @desc   Tests auth route
+// @access public
+router.get("/test", (_, res) => {
+  res.status(200).json({ msg: "users" });
+});
 
 // @route  GET api/users
 // @desc   get all users
@@ -26,7 +31,7 @@ router.get(
   }
 );
 
-// @route  GET api/users/id/userId
+// @route  GET api/users/id/:userId
 // @desc   get user from id
 // @access private
 router.get(
@@ -62,7 +67,7 @@ router.get(
   }
 );
 
-// @route  DELETE api/users/id/userId
+// @route  DELETE api/users/id/:userId
 // @desc   delete user by id
 // @access private
 router.delete(
@@ -87,14 +92,14 @@ router.delete(
   }
 );
 
-// @route  PUT api/users/id/userId
-// @desc   update user by id
+// @route  PUT api/users/id/:userId
+// @desc   update user (username) by id
 // @access private
 router.put(
   "/id/:userId",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    //decoding the currently logged it users data
+    //decoding the currently logged in users data
     const jwtData = jwt.decode(req.headers.authorization.split(" ")[1]);
 
     //check if current user is updating themself (they cant update others duh!)
@@ -123,6 +128,20 @@ router.put(
     } else {
       res.status(401).json({ error: "unauthorized" });
     }
+  }
+);
+
+// @route  GET api/users/me
+// @desc   get currently logged in user
+// @access private
+router.get(
+  "/me",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    res.status(200).json({
+      id: req.user.id,
+      username: req.user.username,
+    });
   }
 );
 

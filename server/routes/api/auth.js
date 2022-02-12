@@ -1,7 +1,6 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const passport = require("passport");
 const secretOrKey = require("../../config/secrets").secretOrKey;
 const User = require("../../models/User");
 const validateRegisterInput = require("../../validation/register");
@@ -9,15 +8,15 @@ const validateLoginInput = require("../../validation/login");
 
 const router = express.Router();
 
-// @route  GET api/auth
-// @desc   Tests auth route
+// @route  GET api/auth/test
+// @desc   tests auth route
 // @access public
-router.get("/", (req, res) => {
+router.get("/test", (_, res) => {
   res.status(200).json({ msg: "auth" });
 });
 
 // @route  POST api/auth/register
-// @desc   Register new user
+// @desc   register a new user
 // @access public
 router.post("/register", (req, res) => {
   const { errors, isValid } = validateRegisterInput(req.body);
@@ -80,19 +79,5 @@ router.post("/login", (req, res) => {
     }
   });
 });
-
-// @route  GET api/auth/current
-// @desc   return currently logged in user
-// @access private
-router.get(
-  "/me",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    res.status(200).json({
-      id: req.user.id,
-      username: req.user.username,
-    });
-  }
-);
 
 module.exports = router;

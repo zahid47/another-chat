@@ -7,7 +7,7 @@ FIXME:  can create two convos with the same person.
 REASON: "hasConvoFlag" not updating for some reason.
 IDEAS:  make sure we are not able to do that on the server side.
 
-TODO: work on the server, convo route
+TODO NEXT: work on the server, msg route
 
 TODO: be able to update pass
 
