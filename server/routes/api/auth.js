@@ -1,10 +1,12 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
+const passport = require("passport");
 const jwt = require("jsonwebtoken");
 const secretOrKey = require("../../config/secrets").secretOrKey;
 const User = require("../../models/User");
 const validateRegisterInput = require("../../validation/register");
 const validateLoginInput = require("../../validation/login");
+const validateUpdatePass = require("../../validation/updatePass");
 
 const router = express.Router();
 
@@ -79,5 +81,58 @@ router.post("/login", (req, res) => {
     }
   });
 });
+
+// @route  POST api/auth/update-pass
+// @desc   update pass of current user
+// @access private
+router.put(
+  "/update-pass",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    if (!req.body.currentPass) {
+      return res.status(400).json({ error: "no currentPass provided" });
+    }
+    if (!req.body.newPass) {
+      return res.status(400).json({ error: "no newPass provided" });
+    }
+    if (req.body.currentPass === req.body.newPass) {
+      return res
+        .status(400)
+        .json({ error: "newPass can't be same as currentPass" });
+    }
+
+    //check if current pass matches
+    bcrypt
+      .compare(req.body.currentPass, req.user.password)
+      .then((matched) => {
+        if (matched) {
+          const { errors, isValid } = validateUpdatePass(req.body);
+
+          if (!isValid) {
+            return res.status(400).json(errors);
+          }
+
+          //update pass now
+          const updatedPass = {};
+
+          //hash the pass
+          bcrypt.genSalt((err, salt) => {
+            if (err) throw err;
+            bcrypt.hash(req.body.newPass, salt, (err, hashedPassword) => {
+              if (err) throw err;
+              updatedPass.password = hashedPassword;
+              //save the new pass in DB
+              User.findByIdAndUpdate(req.user.id, updatedPass)
+                .then((user) => res.status(200).json(user))
+                .catch((err) => res.status(502).json(err));
+            });
+          });
+        } else {
+          res.status(400).json({ password: "wrong password" });
+        }
+      })
+      .catch((err) => res.status(400).json(err));
+  }
+);
 
 module.exports = router;

@@ -7,8 +7,10 @@ FIXME:  can create two convos with the same person.
 REASON: "hasConvoFlag" not updating for some reason.
 IDEAS:  make sure we are not able to do that on the server side.
 
-TODO NEXT: work on the server, msg route
+TODO: end-to-end text-msg encryption (maybe use private keys??!!! :0)
 
+
+----------------------------------- DONE -----------------------------------
+
+TODO NEXT: work on the server
 TODO: be able to update pass
-
-TODO: end-to-end text-msg encryption (mnaybe use private keys??!!! :0)

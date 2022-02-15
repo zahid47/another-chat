@@ -6,9 +6,9 @@ const cors = require("cors");
 const secrets = require("./config/secrets");
 //routes
 const auth = require("./routes/api/auth");
-const users = require("./routes/api/users");
-const chat = require("./routes/api/chats");
-const message = require("./routes/api/messages");
+const user = require("./routes/api/user");
+const chat = require("./routes/api/chat");
+const message = require("./routes/api/message");
 
 //express stuff
 const app = express();
@@ -45,9 +45,9 @@ app.get("/", (req, res) => {
 
 //Routes
 app.use("/api/auth", auth);
-app.use("/api/users", users);
-app.use("/api/chats", chat);
-app.use("/api/messages", message);
+app.use("/api/user", user);
+app.use("/api/chat", chat);
+app.use("/api/message", message);
 ///
 
 app.listen(PORT, () => {

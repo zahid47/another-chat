@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 
 const messageSchema = new Schema(
   {
-    conversationId: {
+    chatId: {
       type: String,
     },
     senderId: {
