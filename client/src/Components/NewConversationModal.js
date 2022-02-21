@@ -2,13 +2,15 @@ import axios from "axios";
 import React, { useState } from "react";
 import { Button, Modal, Form } from "react-bootstrap";
 import isEmpty from "../utils/isEmpty";
+import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 //TODO handle if no convos
 
 export default function NewConversationModal({ show, setShowModal, user }) {
   const [friendsName, setFriendsName] = useState("");
   const [alertMsg, setAlertMsg] = useState("");
 
-  const [hasConvoFlag, setHasConvoFlag] = useState(false);
+  const navigate = useNavigate();
 
   const handleCloseModal = () => {
     setAlertMsg("");
@@ -25,45 +27,31 @@ export default function NewConversationModal({ show, setShowModal, user }) {
       setAlertMsg("You can't send message to yourself!");
     } else {
       //finding the friend
+      const options = {
+        headers: {
+          Authorization: `Bearer ${Cookies.get("token")}`,
+          "Content-Type": "application/json",
+        },
+      };
       axios
-        .get(`http://localhost:8000/api/user/name/${friendsName}`)
+        .get(`http://localhost:8000/api/user/name/${friendsName}`, options)
+        // friend found!
         .then((friendResponse) => {
-          //first check if we already have a convo with this friend
+          //try to create a convo with this friend
+          const newConvo = {
+            senderId: user.id,
+            receiverId: friendResponse.data.id,
+          };
           axios
-            .get(`http://localhost:8000/api/chat/conversations/${user.id}`)
-            .then((convoResponse) => {
-              for (const convo of convoResponse.data) {
-                if (convo.members.includes(friendResponse.data.id)) {
-                  setHasConvoFlag(true);
-                  setAlertMsg(
-                    "You already have a conversation with this friend"
-                  );
-                  console.log("match!");
-                  console.log(hasConvoFlag);
-                  break;
-                }
-              }
-
-              if (!hasConvoFlag) {
-                //we dont already have a convo so creating a new one!
-                const newConvo = {
-                  senderId: user.id,
-                  receiverId: friendResponse.data.id,
-                };
-                axios
-                  .post(
-                    "http://localhost:8000/api/chat/conversations",
-                    newConvo
-                  )
-                  .then((friendResponse) => console.log("convo created!"))
-                  .catch((err) => console.log(err));
-
-                handleCloseModal();
-              }
+            .post("http://localhost:8000/api/chat", newConvo, options)
+            .then(() => {
+              handleCloseModal();
+              navigate("/"); //reload the page to upate new convos (hacky solution, try to make it better later)
             })
-            .catch((err) => console.log(err));
+            .catch((err) => setAlertMsg(err.response.data.error));
         })
-        .catch((err) => setAlertMsg("404 friend not found."));
+
+        .catch(() => setAlertMsg("404 friend not found."));
     }
   };
 
@@ -91,7 +79,7 @@ export default function NewConversationModal({ show, setShowModal, user }) {
                 setFriendsName(e.target.value);
               }}
             />
-            <Form.Text className="text-muted">{alertMsg}</Form.Text>
+            <Form.Text className="text-danger">{alertMsg}</Form.Text>
           </Form.Group>
         </Form>
       </Modal.Body>

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
-import { Container, Button, Modal } from "react-bootstrap";
+import { Container, Button } from "react-bootstrap";
 import axios from "axios";
-import Conversation from "./Conversations";
+import Conversations from "./Conversations";
 import NewConversationModal from "./NewConversationModal";
 
 export default function Dashboard() {
@@ -19,7 +19,7 @@ export default function Dashboard() {
       },
     };
     axios
-      .get("http://localhost:8000/api/auth/current", options)
+      .get("http://localhost:8000/api/user/me", options)
       .then((response) => {
         setUser(response.data);
       })
@@ -30,13 +30,16 @@ export default function Dashboard() {
 
   useEffect(() => {
     getUser();
+
+    return () => {
+      setUser({});
+    };
   }, []);
 
   const handleLogout = (e) => {
     e.preventDefault();
 
     Cookies.remove("token");
-    setUser({});
     navigate("/auth");
   };
 
@@ -50,7 +53,7 @@ export default function Dashboard() {
         + New Conversation
       </Button>
 
-      <Conversation user={user} />
+      <Conversations user={user} />
 
       <hr></hr>
 

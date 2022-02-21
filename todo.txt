@@ -12,5 +12,5 @@ TODO: end-to-end text-msg encryption (maybe use private keys??!!! :0)
 
 ----------------------------------- DONE -----------------------------------
 
-TODO NEXT: work on the server
+TODO: work on the server
 TODO: be able to update pass

@@ -3,15 +3,13 @@ import { useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
-import DismissableAlert from "./DismissableAlert";
+import classnames from "classnames";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const [showAuthAlert, setShowAuthAlert] = useState(false);
-  const [authAlertText, setAuthAlertText] = useState("");
-  const [authAlertVariant, setAuthAlertVariant] = useState("dark");
+  const [errors, setErrors] = useState("");
 
   const navigate = useNavigate();
 
@@ -25,17 +23,11 @@ export default function Login() {
 
     axios
       .post("http://localhost:8000/api/auth/register", newUser)
-      .then((response) => {
-        setAuthAlertText(
-          `Hello ${response.data.username}, your registration was successful. Please Log in.`
-        );
-        setAuthAlertVariant("success");
-        setShowAuthAlert(true);
+      .then(() => {
+        handleLogin(e);
       })
       .catch((err) => {
-        setAuthAlertText(JSON.stringify(err.response.data));
-        setAuthAlertVariant("danger");
-        setShowAuthAlert(true);
+        setErrors(err.response.data);
       });
   };
 
@@ -57,10 +49,7 @@ export default function Login() {
         navigate("/dashboard");
       })
       .catch((err) => {
-        //TODO: make the error msgs better!
-        setAuthAlertText(JSON.stringify(err.response.data));
-        setAuthAlertVariant("danger");
-        setShowAuthAlert(true);
+        setErrors(err.response.data);
       });
   };
 
@@ -70,33 +59,30 @@ export default function Login() {
       style={{ height: "100vh" }}
     >
       <Form className="w-100">
-        <DismissableAlert
-          variant={authAlertVariant}
-          text={authAlertText}
-          show={showAuthAlert}
-          setShow={setShowAuthAlert}
-        />
-
         <Form.Group>
           <Form.Label>Username</Form.Label>
           <Form.Control
+            className={classnames({ "is-invalid": errors.username })}
             type="text"
             placeholder="Enter username"
             onChange={(e) => {
               setUsername(e.target.value);
             }}
           ></Form.Control>
+          <Form.Text className="text-danger">{errors.username}</Form.Text>
         </Form.Group>
 
         <Form.Group>
           <Form.Label>Password</Form.Label>
           <Form.Control
+            className={classnames({ "is-invalid": errors.password })}
             type="password"
             placeholder="Enter password"
             onChange={(e) => {
               setPassword(e.target.value);
             }}
           ></Form.Control>
+          <Form.Text className="text-danger">{errors.password}</Form.Text>
         </Form.Group>
 
         <hr style={{ opacity: 0 }}></hr>

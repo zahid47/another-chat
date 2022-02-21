@@ -61,7 +61,7 @@ router.post(
           //cant create another chat
           res
             .status(400)
-            .json({ error: "already have a chat with this receiver" });
+            .json({ error: "You already have a conversation with this friend" });
         } else {
           Chat.findOne({ members: [req.body.receiverId, req.body.senderId] })
             .then((chat) => {
@@ -69,7 +69,7 @@ router.post(
                 //cant create another chat
                 return res
                   .status(400)
-                  .json({ error: "already have a chat with this receiver" });
+                  .json({ error: "You already have a conversation with this friend" });
               } else {
                 //create a new chat
                 const newChat = new Chat({
