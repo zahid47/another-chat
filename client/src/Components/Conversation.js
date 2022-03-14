@@ -35,5 +35,5 @@ export default function Conversation({ conversation, userId }) {
     };
   }, [conversation, userId]);
 
-  return <div>{friend.username}</div>;
+  return <div className="convo">{friend.username}</div>;
 }

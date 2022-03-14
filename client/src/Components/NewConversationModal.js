@@ -4,7 +4,6 @@ import { Button, Modal, Form } from "react-bootstrap";
 import isEmpty from "../utils/isEmpty";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
-//TODO handle if no convos
 
 export default function NewConversationModal({ show, setShowModal, user }) {
   const [friendsName, setFriendsName] = useState("");
@@ -73,7 +72,7 @@ export default function NewConversationModal({ show, setShowModal, user }) {
           <Form.Group className="mb-3" controlId="formBasicEmail">
             <Form.Label>Friend's Name</Form.Label>
             <Form.Control
-              type="email"
+              type="text"
               placeholder="Enter your friends username"
               onChange={(e) => {
                 setFriendsName(e.target.value);

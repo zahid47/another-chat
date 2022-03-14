@@ -1,0 +1,48 @@
+.chat {
+  /* height: calc(100vh - 100px); */
+  display: flex;
+}
+
+.conversationsTab {
+  flex: 2.5;
+}
+
+.messagesTab {
+  flex: 6;
+}
+
+.messagesWrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.texts {
+  height: 500px;
+  overflow-y: scroll;
+}
+.conversationsWrapper,
+.messagesWrapper {
+  padding: 10px;
+  height: 100%;
+}
+
+.convo {
+  cursor: pointer;
+}
+
+.convo:hover {
+  color: #007bff;
+}
+
+.senderName {
+  color: gray;
+  font-weight: bolder;
+}
+
+.textMsg{
+  font-size: 18px;
+}
+
+.timeAgo {
+  color: gray;
+}

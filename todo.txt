@@ -1,16 +1,13 @@
-FIXME:  when creating a new convo, if we get an error, we cant create a new convo even with correct details.
-        have to reload in order for it to work again.
-REASON: UNKNOWN
-IDEAS:  NONE
-
-FIXME:  can create two convos with the same person.
-REASON: "hasConvoFlag" not updating for some reason.
-IDEAS:  make sure we are not able to do that on the server side.
-
 TODO: end-to-end text-msg encryption (maybe use private keys??!!! :0)
 
+TODO: make the scroll messages better (useRef)
 
------------------------------------ DONE -----------------------------------
+----------------------------------- COMPLETE -----------------------------------
 
-TODO: work on the server
-TODO: be able to update pass
+DONE: work on the server
+DONE: be able to update pass
+
+FIXED:  when creating a new convo, if we get an error, we cant create a new convo even with correct details.
+        have to reload in order for it to work again.
+
+FIXED:  can create two convos with the same person.
