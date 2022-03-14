@@ -7,6 +7,7 @@ import NewConversationModal from "./NewConversationModal";
 import Conversation from "./Conversation";
 import Message from "./Message";
 import isEmpty from "../utils/isEmpty";
+import { io } from "socket.io-client";
 
 export default function Dashboard() {
   const [user, setUser] = useState({});
@@ -15,14 +16,41 @@ export default function Dashboard() {
   const [conversations, setConversations] = useState([]);
   const [currentConversation, setCurrentConversation] = useState(null);
   const [messages, setMessages] = useState([]);
-
-  const [noTextError, setNoTextError] = useState("");
+  const [arrivalMessage, setArrivalMessage] = useState(null);
 
   const [text, setText] = useState("");
+  const [noTextError, setNoTextError] = useState("");
 
   const scrollRef = useRef();
+  const socket = useRef();
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    socket.current = io("ws://localhost:8900");
+
+    socket.current.on("getMsg", (data) => {
+      setArrivalMessage({
+        senderId: data.senderId,
+        text: data.text,
+        createdAt: Date.now(),
+      });
+    });
+  }, []);
+
+  useEffect(() => {
+    arrivalMessage &&
+      currentConversation?.members.includes(arrivalMessage.senderId) &&
+      setMessages((prev) => [...prev, arrivalMessage]);
+  }, [arrivalMessage, currentConversation]);
+
+  //send current userId to the socket server
+  useEffect(() => {
+    socket.current.emit("addMe", user.id);
+    socket.current.on("getUsers", (users) => {
+      console.log(users);
+    });
+  }, [user]);
 
   useEffect(() => {
     const getUser = () => {
@@ -100,6 +128,16 @@ export default function Dashboard() {
       setNoTextError("Message cannot be empty!");
       setText("");
     } else {
+      const friendId = currentConversation.members.find(
+        (member) => member !== user.id
+      );
+
+      socket.current.emit("sendMsg", {
+        senderId: user.id,
+        receiverId: friendId,
+        text: text,
+      });
+
       const options = {
         headers: {
           Authorization: `Bearer ${Cookies.get("token")}`,
@@ -161,7 +199,7 @@ export default function Dashboard() {
             <>
               <div className="texts">
                 {messages.map((msg) => (
-                  <div key={msg._id} ref={scrollRef}>
+                  <div key={msg.id} ref={scrollRef}>
                     <Message message={msg} />
                     <br />
                   </div>

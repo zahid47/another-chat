@@ -35,7 +35,8 @@ export default function Message({ message }) {
       <div className="senderName">{friendName}</div>
       <div className="textMsg">{message.text}</div>
       <div className="timeAgo">
-        {timeAgo.format(new Date(message.updatedAt))}
+        sometime ago
+        {/* {timeAgo.format(new Date(message.updatedAt))} */}
       </div>
     </div>
   );

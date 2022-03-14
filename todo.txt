@@ -2,6 +2,8 @@ TODO: end-to-end text-msg encryption (maybe use private keys??!!! :0)
 
 TODO: make the scroll messages better (useRef)
 
+TODO: understand socketio
+
 ----------------------------------- COMPLETE -----------------------------------
 
 DONE: work on the server
