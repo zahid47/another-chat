@@ -1,14 +1,17 @@
+const clientURL = require("./config/secrets");
+
 const io = require("socket.io")(8900, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: clientURL,
   },
 });
 
 let users = [];
 
 const addUser = (userId, socketId) => {
-  !users.some((user) => user.userId === userId) &&
+  if (!users.some((user) => user.userId === userId)) {
     users.push({ userId, socketId });
+  }
 };
 
 const getUser = (userId) => {
@@ -21,25 +24,24 @@ const removeUser = (socketId) => {
 
 io.on("connection", (socket) => {
   ///on connection
-  console.log("A user connected!");
-  //take userId from client
+  console.log(`${socket.id} has connected!`);
+
+  //save new user in users array
   socket.on("addMe", (userId) => {
     addUser(userId, socket.id);
-    //send all users to all clients
-    io.emit("getUsers", users);
 
     ///send and get msgs
     socket.on("sendMsg", ({ senderId, receiverId, text }) => {
-      const user = getUser(receiverId);
+      const receiver = getUser(receiverId);
 
-      io.to(user.socketId).emit("getMsg", { senderId, text });
+      io.to(receiver.socketId).emit("getMsg", { senderId, text });
     });
 
     ///on disconnection
     socket.on("disconnect", () => {
-      console.log("A user disconnected!");
+      console.log(`${socket.id} has disconnected!`);
+      //remove user from users array
       removeUser(socket.id);
-      io.emit("getUsers", users);
     });
   });
 });

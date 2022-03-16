@@ -4,6 +4,8 @@ TODO: make the scroll messages better (useRef)
 
 TODO: understand socketio
 
+TODO: fix timeago (not timeagos fault)
+
 ----------------------------------- COMPLETE -----------------------------------
 
 DONE: work on the server

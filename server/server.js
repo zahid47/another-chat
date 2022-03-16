@@ -10,6 +10,8 @@ const user = require("./routes/api/user");
 const chat = require("./routes/api/chat");
 const message = require("./routes/api/message");
 
+const clientURL = require("./config/secrets");
+
 //express stuff
 const app = express();
 const PORT = 8000 || secrets.PORT;
@@ -22,7 +24,7 @@ require("./config/passport")(passport);
 //cors stuff
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: clientURL,
   })
 );
 ///

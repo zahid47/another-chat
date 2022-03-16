@@ -8,6 +8,7 @@ import Conversation from "./Conversation";
 import Message from "./Message";
 import isEmpty from "../utils/isEmpty";
 import { io } from "socket.io-client";
+import { serverURL } from "../config/secrets";
 
 export default function Dashboard() {
   const [user, setUser] = useState({});
@@ -29,27 +30,26 @@ export default function Dashboard() {
   useEffect(() => {
     socket.current = io("ws://localhost:8900");
 
-    socket.current.on("getMsg", (data) => {
+    socket.current.on("getMsg", ({ senderId, text }) => {
       setArrivalMessage({
-        senderId: data.senderId,
-        text: data.text,
-        createdAt: Date.now(),
+        senderId: senderId,
+        text: text,
+        updatedAt: Date.now(),
       });
     });
   }, []);
 
   useEffect(() => {
-    arrivalMessage &&
-      currentConversation?.members.includes(arrivalMessage.senderId) &&
-      setMessages((prev) => [...prev, arrivalMessage]);
+    if (arrivalMessage) {
+      if (currentConversation?.members.includes(arrivalMessage.senderId)) {
+        setMessages((prev) => [...prev, arrivalMessage]);
+      }
+    }
   }, [arrivalMessage, currentConversation]);
 
   //send current userId to the socket server
   useEffect(() => {
     socket.current.emit("addMe", user.id);
-    socket.current.on("getUsers", (users) => {
-      console.log(users);
-    });
   }, [user]);
 
   useEffect(() => {
@@ -61,7 +61,7 @@ export default function Dashboard() {
         },
       };
       axios
-        .get("http://localhost:8000/api/user/me", options)
+        .get(`${serverURL}/api/user/me`, options)
         .then((response) => {
           setUser(response.data);
         })
@@ -78,7 +78,7 @@ export default function Dashboard() {
         },
       };
       axios
-        .get(`http://localhost:8000/api/chat`, options)
+        .get(`${serverURL}/api/chat`, options)
         .then((res) => setConversations(res.data))
         .catch((err) => console.log(err));
     };
@@ -101,7 +101,7 @@ export default function Dashboard() {
       };
       axios
         .get(
-          `http://localhost:8000/api/message/${currentConversation?._id}`,
+          `${serverURL}/api/message/${currentConversation?._id}`,
           options
         )
         .then((res) => setMessages(res.data))
@@ -126,7 +126,7 @@ export default function Dashboard() {
 
     if (isEmpty(text)) {
       setNoTextError("Message cannot be empty!");
-      setText("");
+      setText(""); //just in case
     } else {
       const friendId = currentConversation.members.find(
         (member) => member !== user.id
@@ -145,14 +145,14 @@ export default function Dashboard() {
         },
       };
 
-      const newText = {
+      const newMsgObj = {
         chatId: currentConversation._id,
         senderId: user.id,
         text: text,
       };
 
       axios
-        .post(`http://localhost:8000/api/message`, newText, options)
+        .post(`${serverURL}/api/message`, newMsgObj, options)
         .then((response) => {
           setMessages([...messages, response.data]);
           setText("");

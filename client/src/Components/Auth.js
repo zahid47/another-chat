@@ -4,6 +4,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import classnames from "classnames";
+import { serverURL } from "../config/secrets";
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -22,7 +23,7 @@ export default function Login() {
     };
 
     axios
-      .post("http://localhost:8000/api/auth/register", newUser)
+      .post(`${serverURL}/api/auth/register`, newUser)
       .then(() => {
         handleLogin(e);
       })
@@ -40,7 +41,7 @@ export default function Login() {
     };
 
     axios
-      .post("http://localhost:8000/api/auth/login", newUser)
+      .post(`${serverURL}/api/auth/login`, newUser)
       .then((response) => {
         Cookies.set("token", response.data.token, {
           expires: 1,

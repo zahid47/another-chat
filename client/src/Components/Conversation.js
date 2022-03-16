@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { serverURL } from "../config/secrets";
 
 export default function Conversation({ conversation, userId }) {
   const [friend, setFriend] = useState("");
@@ -19,7 +20,7 @@ export default function Conversation({ conversation, userId }) {
       };
 
       axios
-        .get(`http://localhost:8000/api/user/id/${friendId}`, options)
+        .get(`${serverURL}/api/user/id/${friendId}`, options)
         .then((response) => {
           setFriend(response.data);
         })
