@@ -2,9 +2,6 @@ TODO: end-to-end text-msg encryption (maybe use private keys??!!! :0)
 
 TODO: make the scroll messages better (useRef)
 
-TODO: understand socketio
-
-TODO: fix timeago (not timeagos fault)
 
 ----------------------------------- COMPLETE -----------------------------------
 
@@ -15,3 +12,7 @@ FIXED:  when creating a new convo, if we get an error, we cant create a new conv
         have to reload in order for it to work again.
 
 FIXED:  can create two convos with the same person.
+
+FIXED: fix socketio
+
+FIXED: fix timeago (not timeagos fault)

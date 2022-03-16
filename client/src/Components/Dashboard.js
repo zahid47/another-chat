@@ -1,13 +1,14 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
 import { Container, Button, Form } from "react-bootstrap";
+import Cookies from "js-cookie";
 import axios from "axios";
+import { io } from "socket.io-client";
+
 import NewConversationModal from "./NewConversationModal";
 import Conversation from "./Conversation";
 import Message from "./Message";
 import isEmpty from "../utils/isEmpty";
-import { io } from "socket.io-client";
 import { serverURL } from "../config/secrets";
 
 export default function Dashboard() {
