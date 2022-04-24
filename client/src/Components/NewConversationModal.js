@@ -4,7 +4,7 @@ import { Button, Modal, Form } from "react-bootstrap";
 import isEmpty from "../utils/isEmpty";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
-import { serverURL } from "../config/secrets";
+import { serverURL } from "../config/baseURL";
 
 export default function NewConversationModal({ show, setShowModal, user }) {
   const [friendsName, setFriendsName] = useState("");
@@ -34,7 +34,10 @@ export default function NewConversationModal({ show, setShowModal, user }) {
         },
       };
       axios
-        .get(`${serverURL}/api/user/name/${friendsName}`, options)
+        .get(
+          `${serverURL}/api/user/name/${friendsName}`,
+          options
+        )
         // friend found!
         .then((friendResponse) => {
           //try to create a convo with this friend
@@ -43,7 +46,11 @@ export default function NewConversationModal({ show, setShowModal, user }) {
             receiverId: friendResponse.data.id,
           };
           axios
-            .post(`${serverURL}/api/chat`, newConvo, options)
+            .post(
+              `${serverURL}/api/chat`,
+              newConvo,
+              options
+            )
             .then(() => {
               handleCloseModal();
               navigate("/"); //reload the page to upate new convos (hacky solution, try to make it better later)

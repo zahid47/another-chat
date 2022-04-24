@@ -17,7 +17,7 @@ function App() {
   return (
     <>
       <Container>
-        <h3 style={{ textAlign: "center" }}>welcome to another-chat</h3>
+        <h3 style={{ textAlign: "center" }}>welcome to another-chat v0.0.1</h3>
       </Container>
       <Outlet />
     </>

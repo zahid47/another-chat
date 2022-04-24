@@ -9,7 +9,7 @@ import NewConversationModal from "./NewConversationModal";
 import Conversation from "./Conversation";
 import Message from "./Message";
 import isEmpty from "../utils/isEmpty";
-import { serverURL } from "../config/secrets";
+import { serverURL, socketURL } from "../config/baseURL";
 
 export default function Dashboard() {
   const [user, setUser] = useState({});
@@ -29,7 +29,7 @@ export default function Dashboard() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    socket.current = io("ws://localhost:8900");
+    socket.current = io(socketURL);
 
     socket.current.on("getMsg", ({ senderId, text }) => {
       setArrivalMessage({

@@ -2,7 +2,6 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
-const secretOrKey = require("../../config/secrets").secretOrKey;
 const User = require("../../models/User");
 const validateRegisterInput = require("../../validation/register");
 const validateLoginInput = require("../../validation/login");
@@ -70,10 +69,15 @@ router.post("/login", (req, res) => {
       bcrypt.compare(req.body.password, user.password).then((matched) => {
         if (matched) {
           const payload = { id: user.id, username: user.username };
-          jwt.sign(payload, secretOrKey, { expiresIn: 3600 }, (err, token) => {
-            if (err) throw err;
-            res.status(200).json({ token: token });
-          });
+          jwt.sign(
+            payload,
+            process.env.secretOrKey,
+            { expiresIn: 3600 },
+            (err, token) => {
+              if (err) throw err;
+              res.status(200).json({ token: token });
+            }
+          );
         } else {
           res.status(400).json({ password: "wrong password" });
         }

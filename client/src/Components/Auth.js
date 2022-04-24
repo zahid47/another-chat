@@ -4,7 +4,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import classnames from "classnames";
-import { serverURL } from "../config/secrets";
+import { serverURL } from "../config/baseURL";
 
 export default function Login() {
   const [username, setUsername] = useState("");

@@ -1,8 +1,8 @@
-const clientURL = require("./config/secrets");
+require("dotenv").config();
 
-const io = require("socket.io")(8900, {
+const io = require("socket.io")(process.env.PORT || 8900, {
   cors: {
-    origin: clientURL,
+    origin: [process.env.clientURL],
   },
 });
 

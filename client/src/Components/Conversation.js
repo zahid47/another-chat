@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { serverURL } from "../config/secrets";
+import { serverURL } from "../config/baseURL";
 
 export default function Conversation({ conversation, userId }) {
   const [friend, setFriend] = useState("");

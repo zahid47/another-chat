@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en.json";
-import { serverURL } from "../config/secrets";
+import { serverURL } from "../config/baseURL";
 
 TimeAgo.addDefaultLocale(en);
 const timeAgo = new TimeAgo("en-US");

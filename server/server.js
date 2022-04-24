@@ -3,18 +3,16 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const passport = require("passport");
 const cors = require("cors");
-const secrets = require("./config/secrets");
+require("dotenv").config();
 //routes
 const auth = require("./routes/api/auth");
 const user = require("./routes/api/user");
 const chat = require("./routes/api/chat");
 const message = require("./routes/api/message");
 
-const clientURL = require("./config/secrets");
-
 //express stuff
 const app = express();
-const PORT = 8000 || secrets.PORT;
+const PORT = 8000 || process.env.PORT;
 //body-parser stuff
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -24,13 +22,13 @@ require("./config/passport")(passport);
 //cors stuff
 app.use(
   cors({
-    origin: clientURL,
+    origin: process.env.clientURL,
   })
 );
 ///
 
 //mongo stuff
-const db = secrets.mongodbURI;
+const db = process.env.mongodbURI;
 mongoose
   .connect(db)
   .then(() => {
@@ -52,6 +50,6 @@ app.use("/api/chat", chat);
 app.use("/api/message", message);
 ///
 
-app.listen(PORT, () => {
+app.listen(process.env.PORT || PORT, () => {
   console.log(`app running at port ${PORT}`);
 });
