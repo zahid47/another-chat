@@ -38,11 +38,11 @@
 ### Tech Stack
 
   <ul>
-    <li><a href="">Node.js</a></li>
-    <li><a href="">JWT</a></li>
-    <li><a href="">MongoDB</a></li>
-    <li><a href="">Socket.io</a></li>
-    <li><a href="">React</a></li>
+    <li>Node.js</li>
+    <li>JWT</li>
+    <li>MongoDB</li>
+    <li>Socket.io</li>
+    <li>React</li>
   </ul>
 
 <!-- Env Variables -->
