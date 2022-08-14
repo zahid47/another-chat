@@ -6,8 +6,6 @@
     yet another realtime chat app
   </p>
 
-[Live Demo](https://another-chat.netlify.app/)
-
   <br>
 </div>
 
